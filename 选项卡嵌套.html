@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="http://www.lanrenzhijia.com/ajaxjs/1.11.0/jquery-1.11.0.min.js"></script>
+		<script src="js/e-smart-zoom-jquery.min.js"></script>
+		<!--[if lt IE 9]>
+			<script src="http://libs.useso.com/js/html5shiv/3.6/html5shiv.min.js"></script>
+		<![endif]-->
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			body{
+				font-family: "微软雅黑";
+			}
+			#box{
+				width: 800px;
+				height: 400px;
+				border: 5px solid #E7E7E7;
+				margin: 30px auto;
+			}
+			#box>ul{
+				height: 100%;
+				float: left;
+			}
+			#box>ul li{
+				width: 100px;
+				height: 99px;
+				list-style: none;
+				background: #ccc;
+				color: #fff;
+				text-align: center;
+				line-height: 99px;
+				cursor: pointer;
+				border-bottom: 1px solid #fff;
+			}
+			#box>ul li.active{
+				background: #fff;
+				color: #000;
+			}
+			#box img{
+				width: 700px;
+				height: 400px;
+			}
+			#box div ul{
+				position: relative;
+				left: 100px;
+				top: -35px;
+			}
+			#box div ul li{
+				background: #000;
+				height: 30px;
+				line-height: 30px;
+				list-style: none;
+				color: #fff;
+				opacity: 0.7;
+				float: left;
+				font-size: 14px;
+				cursor: pointer;
+				text-align: center;
+				border-right: 1px solid #fff;
+			}
+			#box div ul li.active{
+				background: #EF3163;
+			}
+			#pre{
+				position: absolute;
+				left: 12%;
+			}
+			#next{
+				position: absolute;
+				right: 2%;
+			}
+			#pre,#next{
+				width:50px;
+				height: 50px;
+				
+				border-radius: 6px;
+				background: rgba(0,0,0,0.5);
+				color: #FFF;
+				font-size: 20px;
+				font-weight: bold;
+				text-align: center;
+				line-height: 50px;
+				z-index: 20;
+				
+				top: 40%;
+			}
+		</style>
+		<script>
+			window.onload=function(){
+				var box=document.getElementById("box");
+				var uls=box.querySelectorAll('ul');
+				var img=box.querySelector('img');
+				var pre=document.getElementById("pre");
+				var next=document.getElementById("next");
+				var n;
+				
+				/*
+				 * 注意：
+				 * 	1、对象（大括号）里面只能用键值对key:value，不能再嵌套对象（大括号）
+				 * 	2、数组（中括号）里面可以是数组也可以是对象，但必需用逗号隔开
+				 */
+				var imgArr=[
+					{
+						"name":"暖色调",
+						"right":[
+							{"text":"暖色键盘","img":"img/img1.gif"},
+							{"text":"惬意时光","img":"img/img2.gif"},
+							{"text":"午后","img":"img/img3.gif"},
+							{"text":"一杯苦咖啡","img":"img/img4.gif"}
+						]	
+					},
+					{
+						"name":"金色夕阳",
+						"right":[
+							{"text":"街边夕阳","img":"img/img5.gif"},
+							{"text":"金色稻草","img":"img/img6.gif"}
+						]	
+					},
+					{
+						"name":"灰色格调",
+						"right":[
+							{"text":"灰色通讯","img":"img/img7.gif"},
+							{"text":"咖啡\"配\"饼干","img":"img/img8.gif"},
+							{"text":"孤单键盘","img":"img/img9.gif"},
+							{"text":"枯树","img":"img/img10.gif"}
+						]	
+					},
+					{
+						"name":"baby",
+						"right":[
+							{"text":"baby素材一","img":"img/img11.gif"},
+							{"text":"baby素材二","img":"img/img12.gif"}
+						]	
+					}
+				];
+				
+				for(var i=0;i<imgArr.length;i++){
+					
+					var cl=i?'':'active';
+					uls[0].innerHTML+='<li class="'+cl+'">'+imgArr[i].name+'</li>';
+					
+					
+				}
+				
+				
+				//添加左侧内容
+				var leftLis=uls[0].querySelectorAll('li');
+				var lastClick=leftLis[0];
+				for(var i=0;i<leftLis.length;i++){
+					leftLis[i].index=i;
+					leftLis[i].onclick=function(){
+						/*
+						 * 选项卡，用的是清空上一个对象
+						 */
+						lastClick.className='';
+						
+						this.className='active';
+						lastClick=this;
+						
+						tab(this.index);
+						cuts(this.index);
+						
+						
+						
+						n=0;
+						
+						//点击的时候要修改图片的地址，默认点击左边的时候都显示第一张图片
+						img.src=imgArr[this.index].right[0].img;
+					};
+				}
+				var n=0;
+				pre.onclick=function(){
+				  var lis=uls[1].querySelectorAll('li');
+					    
+						for(var i=0;i<lis.length;i++){
+								
+								
+								 n--;
+								 if(n<0){
+								  n=lis.length-1;
+								 
+								 }
+								for(var i=0;i<lis.length;i++){
+										lis[i].className='';
+								}
+							   lis[n].className="active";
+							   img.src=imgArr[0].right[n].img;
+							
+						}
+					
+				}
+				
+				next.onclick=function(){
+				  var lis=uls[1].querySelectorAll('li');
+					    
+						for(var i=0;i<lis.length;i++){
+								
+								
+								
+								n++;
+								if(n>lis.length-1){
+									n=0;
+								}
+
+									for(var i=0;i<lis.length;i++){
+										lis[i].className='';
+									}
+									 lis[n].className="active";
+									img.src=imgArr[0].right[n].img;
+							
+						}
+					
+				}
+				
+				function cuts(m){
+							
+					var lis=uls[1].querySelectorAll('li');
+					
+						for(var i=0;i<lis.length;i++){
+								
+								pre.onclick=function(){
+								 n--;
+								 if(n<0){
+								  n=lis.length-1;
+								 
+								 }
+								// alert(n);
+							
+								for(var i=0;i<lis.length;i++){
+										lis[i].className='';
+								}
+									 lis[n].className="active";
+									 img.src=imgArr[m].right[n].img;
+									
+								}
+								
+								
+								
+							}
+							
+							for(var i=0;i<lis.length;i++){
+							
+								next.onclick=function(){
+								//alert(1);
+								n++;
+								if(n>lis.length-1){
+									n=0;
+								}
+									for(var i=0;i<lis.length;i++){
+										lis[i].className='';
+									}
+									 lis[n].className="active";
+									img.src=imgArr[m].right[n].img;
+								}
+								
+								
+							}
+				}
+			
+				
+				
+				function tab(n){
+					uls[1].innerHTML='';	//清空
+					for(var i=0;i<imgArr[n].right.length;i++){
+						var cl=i?'':'active';
+						
+						//用宽度/个数可以算出来一个Li的宽度
+						var w=700/imgArr[n].right.length;
+						uls[1].innerHTML+='<li class="'+cl+'" style="width:'+w+'px">'+imgArr[n].right[i].text+'</li>';
+					}
+					
+					var lis=uls[1].querySelectorAll('li');
+					for(var i=0;i<lis.length;i++){
+							lis[i].index=i;
+							lis[i].onclick=function(){
+								for(var i=0;i<lis.length;i++){
+									lis[i].className='';
+								}
+								this.className='active';
+								
+								/*
+								 * 左侧点击的是第几个（n），就找到imgArr下边的第几条数据，再找到右侧的数据，右侧导航点击的是第几个（this.index）用这个值找到对应的图片
+								 */
+								img.src=imgArr[n].right[this.index].img;
+							};
+							
+					}
+					
+					
+				}
+				tab(0);	//页面一上来的话，右侧显示第一个内容
+				<!-- $('#imageFullScreen').smartZoom({'containerClass':'zoomableContainer'});  -->
+				
+			};
+		</script>
+	</head>
+	<body>
+	
+		<div id="box">
+			<div href="#" id="pre"><</div>
+			<div href="#" id="next">></div>
+			<ul>
+				
+			</ul>
+			<div>
+			<div id="imgContainer">
+				<img src="img/img1.gif" id="imageFullScreen" alt="" />
+				
+				<ul>
+					
+				</ul>
+			</div>
+		</div>
+	</body>
+</html>
